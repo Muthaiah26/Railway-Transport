@@ -30,7 +30,7 @@ import ProfileScreen from './screens/ProfileScreen';
 import RouteDetailScreen from './screens/RouteDetailScreen';
 
 
-// Create Socket Context
+
 export const SocketContext = createContext(null);
 
 SplashScreen.preventAutoHideAsync();
@@ -163,12 +163,7 @@ export default function App() {
   }, [fontsLoaded, fontError]);
 
 
-  async function registerForPushNotificationsAsync() {
-    const { status } = await Notifications.requestPermissionsAsync();
-    if (status !== 'granted') {
-      alert('Permission for notifications not granted!');
-    }
-  }
+  
   
   if (!fontsLoaded && !fontError) {
     return null;

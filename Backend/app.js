@@ -4,16 +4,14 @@ const http = require('http');
 const cors = require('cors');
 const { Server } = require('socket.io');
 const dayjs = require('dayjs');
-require('dotenv').config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(process.env.MONGO_URI, {
+mongoose.connect('mongodb://localhost:27017/college_transport', {
   useNewUrlParser: true,
   useUnifiedTopology: true
-  
 })
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB error:', err));
@@ -56,6 +54,10 @@ app.post('/api/driver/login', async (req, res) => {
 });
 
 
+
+
+
+
 app.get('/api/buses/:id', async (req, res) => {
   const bus = await Bus.findOne({ id: req.params.id });
   if (!bus) return res.status(404).json({ error: 'Bus not found' });
@@ -71,6 +73,10 @@ const INTERVAL_MS = 1 * 60 * 1000;
 
 io.on('connection', socket => {
   console.log('Client connected:', socket.id);
+   socket.on('sendNotification', (data, callback) => {
+    io.emit('studentNotification', data); 
+    callback({ success: true });
+  });
 
  socket.on('startTracking', async ({ mobile, busId }) => {
     const bus = mobile
@@ -105,8 +111,6 @@ io.on('connection', socket => {
     delete trackers[socket.id];
   });
 });
-
-
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {

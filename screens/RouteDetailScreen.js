@@ -6,7 +6,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const socket = io('https://transport-3d8k.onrender.com');
 const ROW_H = 80;
-const INTERVAL_MS = 1 * 60 * 1000; // same as backend
+const INTERVAL_MS = 1 * 60 * 1000; 
 
 export default function RouteDetailScreen() {
   const { params } = useRoute();
@@ -72,7 +72,7 @@ export default function RouteDetailScreen() {
   if (loading) return <ActivityIndicator style={styles.center} size="large" />;
   if (!bus)    return <Text style={styles.center}>Unable to load route.</Text>;
 
-  // Render the stops list
+ 
   const [h, m] = bus.startTime.split(':').map(Number);
   const start  = new Date(); start.setHours(h, m, 0, 0);
   const formatETA = i =>

@@ -22,12 +22,6 @@ export default function NotificationScreen({ route }) {
 
   useEffect(() => {
     
-    fetch('https://transport-3d8k.onrender.com/api/notifications')
-      .then(res => res.json())
-      .then(data => setNotifications(data))
-      .catch(err => console.error(err));
-
-    
     socket.on('studentNotification', async notif => {
       if (role === 'student' || role === 'driver') {
         setNotifications(prev => [notif, ...prev]);
