@@ -22,7 +22,7 @@ export default function NotificationScreen({ route }) {
 
   useEffect(() => {
     
-    fetch('http://192.168.122.91:3000/api/notifications')
+    fetch('https://transport-3d8k.onrender.com/api/notifications')
       .then(res => res.json())
       .then(data => setNotifications(data))
       .catch(err => console.error(err));

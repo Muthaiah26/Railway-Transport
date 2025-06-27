@@ -16,7 +16,7 @@ export default function LoginScreen({ navigation }) {
         return;
       }
       try {
-        const resp = await fetch('http://192.168.82.91:3000/api/driver/login', {
+        const resp = await fetch('https://transport-3d8k.onrender.com/api/driver/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ mobile })

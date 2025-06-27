@@ -18,7 +18,7 @@ export default function SearchScreen() {
     setIsSearching(true);
     try {
       const resp = await fetch(
-        `http://192.168.82.91:3000/api/buses?q=${encodeURIComponent(searchQuery)}`
+        `https://transport-3d8k.onrender.com/api/buses?q=${encodeURIComponent(searchQuery)}`
       );
       const data = await resp.json();
       setSearchResults(Array.isArray(data) ? data : []);

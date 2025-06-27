@@ -133,7 +133,7 @@ export default function App() {
   });
 
   
-  const socket = io('http://192.168.82.91:3000', {
+  const socket = io('https://transport-3d8k.onrender.com', {
     transports: ['websocket'],
   });
 

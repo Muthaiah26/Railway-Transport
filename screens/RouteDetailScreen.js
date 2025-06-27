@@ -4,7 +4,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import io from 'socket.io-client';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const socket = io('http://192.168.82.91:3000');
+const socket = io('https://transport-3d8k.onrender.com');
 const ROW_H = 80;
 const INTERVAL_MS = 1 * 60 * 1000; // same as backend
 
@@ -22,7 +22,7 @@ export default function RouteDetailScreen() {
 
     if (params.userType === 'driver') {
     
-      fetch('http://192.168.82.91:3000/api/driver/login', {
+      fetch('https://transport-3d8k.onrender.com/api/driver/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mobile: params.mobile }),
