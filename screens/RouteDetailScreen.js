@@ -37,7 +37,7 @@ export default function RouteDetailScreen() {
         .finally(() => setLoading(false));
     } else {
       
-      fetch(`http://transport-3d8k.onrender.com/api/buses/${params.busId}`)
+      fetch(`https://transport-3d8k.onrender.com/api/buses/${params.busId}`)
         .then(r => r.json())
         .then(doc => {
           if (doc.error) return Alert.alert('Bus not found', doc.error);

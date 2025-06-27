@@ -28,7 +28,7 @@ export default function LoginScreen({ navigation }) {
         Alert.alert('Login Error', e.message);
       }
     } else {
-      // Navigate to main search/list screen for students/incharge
+      
       navigation.replace('Main', { role: userType });
     }
   };
