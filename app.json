@@ -6,11 +6,18 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "runTimeVersion":"1.0.0",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#ffffff",
+      "updates": {
+        "url": "https://u.expo.dev/335651a2-7a36-4d74-b042-4a1c67eb597d",
+        "channel": "preview",
+        "fallbackToCacheTimeout": 0,
+        "checkAutomatically": "ON_LOAD"
+      }
     },
     "ios": {
       "supportsTablet": true
@@ -19,7 +26,10 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff",
-        "permissions": ["INTERNET"]
+        "permissions": [
+          "INTERNET",
+          "INTERNET"
+        ]
       },
       "package": "com.muthaiah26.MyApp"
     },
@@ -35,6 +45,12 @@
       "eas": {
         "projectId": "335651a2-7a36-4d74-b042-4a1c67eb597d"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/335651a2-7a36-4d74-b042-4a1c67eb597d"
     }
   }
 }

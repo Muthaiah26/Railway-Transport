@@ -14,10 +14,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Enable file uploads
 app.use(fileUpload({ createParentPath: true }));
 
-// Serve static files from 'uploads'
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 

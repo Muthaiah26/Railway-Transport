@@ -46,7 +46,8 @@ export default function SearchScreen() {
           <Feather name="search" size={20} color="#6B7280" />
           <TextInput
             style={styles.searchInput}
-            placeholder="Enter bus number (e.g., BUS001)"
+            placeholder="Enter a Bus Number (e.g.,BUS001)"
+            placeholderTextColor="#777"
             value={searchQuery}
             onChangeText={setSearchQuery}
             autoCapitalize="characters"

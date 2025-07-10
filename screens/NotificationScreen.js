@@ -173,6 +173,7 @@ export default function NotificationScreen({ route }) {
             <TextInput
               style={styles.input}
               placeholder="Type your message..."
+              placeholderTextColor="#000"
               value={newNotification}
               onChangeText={setNewNotification}
               multiline
