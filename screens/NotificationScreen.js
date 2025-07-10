@@ -7,11 +7,15 @@ import {
   TouchableOpacity,
   TextInput,
   Alert,
+  Image,
 } from 'react-native';
+import { Platform } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { SocketContext } from '../App';
 import Toast from 'react-native-toast-message';
 import * as Notifications from 'expo-notifications';
+import * as ImagePicker from 'expo-image-picker';
+import ImageView from 'react-native-image-viewing';
 
 export default function NotificationScreen({ route }) {
   const socket = useContext(SocketContext);
@@ -19,19 +23,34 @@ export default function NotificationScreen({ route }) {
 
   const [notifications, setNotifications] = useState([]);
   const [newNotification, setNewNotification] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null); 
+  const [imageViewerUri, setImageViewerUri] = useState(null); 
+  const [imageViewerVisible, setImageViewerVisible] = useState(false);
 
+  const HOST = Platform.OS === 'android'
+  ? 'http://10.0.2.2:3000'      
+  : 'http://192.168.59.91:3000';
+ 
   useEffect(() => {
+
     
+    fetchNotifications();
+
     socket.on('studentNotification', async notif => {
       if (role === 'student' || role === 'driver') {
         setNotifications(prev => [notif, ...prev]);
 
-          await Notifications.scheduleNotificationAsync({
-          content: {
-            title: notif.title || 'New Notification',
-            body: notif.message || '',
-            sound: true,
-          },
+         const imageUri = notif.imageUrl
+      ? `http://192.168.59.91:3000${notif.imageUrl}`
+      : undefined;
+
+        await Notifications.scheduleNotificationAsync({
+      content: {
+        title: notif.title || 'New Notification',
+        body: notif.message || (imageUri ? '📷 Tap to view image' : ''),
+        sound: true,
+        data: { imageUri },         
+      },
           trigger: null,
         });
       }
@@ -42,29 +61,81 @@ export default function NotificationScreen({ route }) {
     };
   }, [socket, role]);
 
-  const sendNotification = () => {
-    if (!newNotification.trim()) {
-      Alert.alert('Error', 'Please enter a notification message');
+  useEffect(() => {
+    const subscription = Notifications.addNotificationResponseReceivedListener(response => {
+      const imageUri = response.notification.request.content.data.imageUri;
+      console.log('Tapped notification data:', response.notification.request.content.data);
+
+      if (imageUri) {
+        setImageViewerUri(imageUri);
+        setImageViewerVisible(true);
+      }
+    });
+
+    return () => subscription.remove();
+  }, []);
+ 
+
+  const fetchNotifications = async () => {
+    try {
+      const res = await fetch('http://192.168.59.91:3000/api/notifications');
+      const data = await res.json();
+      setNotifications(data);
+    } catch (err) {
+      console.error('Error fetching notifications:', err);
+    }
+  };
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
+    if (!result.canceled) {
+      setSelectedImage(result.assets[0]);
+    }
+  };
+
+  const sendNotification = async () => {
+    if (!newNotification.trim() && !selectedImage) {
+      Alert.alert('Error', 'Please enter a message or select an image');
       return;
     }
 
-    const payload = {
-      title: 'Announcement',
-      message: newNotification,
-      sender: 'Transport Incharge',
-      type: 'info',
-      time: new Date().toISOString(),
-    };
+    const formData = new FormData();
+    formData.append('title', 'Announcement');
+    formData.append('message', newNotification);
+    formData.append('sender', 'Transport Incharge');
+    formData.append('type', 'info');
 
-    
-    socket.emit('sendNotification', payload, response => {
-      if (response.success) {
+    if (selectedImage) {
+      formData.append('image', {
+        uri: selectedImage.uri,
+        type: 'image/jpeg',
+        name: 'notification.jpg',
+      });
+    }
+
+    try {
+      const res = await fetch('http://192.168.59.91:3000/api/notifications', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (data.success) {
         setNewNotification('');
+        setSelectedImage(null);
+        fetchNotifications();
         Alert.alert('Success', 'Notification sent');
-      } else {
-        Alert.alert('Error', 'Failed to send');
       }
-    });
+    } catch (error) {
+      Alert.alert('Error', 'Failed to send');
+    }
   };
 
   return (
@@ -86,6 +157,18 @@ export default function NotificationScreen({ route }) {
       {role === 'incharge' && (
         <View style={styles.sendSection}>
           <Text style={styles.sendTitle}>Send Notification</Text>
+          <TouchableOpacity onPress={pickImage} style={styles.uploadButton}>
+              <Feather name="image" size={16} color="#2563EB" style={{ marginRight: 6 }} />
+              <Text style={styles.uploadText}>
+              {selectedImage ? 'Change Selected Image' : 'Upload Image'}
+             </Text>
+          </TouchableOpacity>
+          {selectedImage && (
+            <Image
+              source={{ uri: selectedImage.uri }}
+              style={{ width: 100, height: 100, marginBottom: 10, borderRadius: 8 }}
+            />
+          )}
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
@@ -108,7 +191,7 @@ export default function NotificationScreen({ route }) {
       <ScrollView style={styles.notificationsList}>
         {notifications.map(notification => (
           <View
-            key={notification.id}
+            key={notification._id || notification.id}
             style={[
               styles.notificationCard,
               !notification.read && styles.unreadCard,
@@ -118,10 +201,16 @@ export default function NotificationScreen({ route }) {
             <TouchableOpacity
               style={styles.notificationContent}
               onPress={() => {
-                // mark as read
-                notification.read = true;
-                setNotifications([...notifications]);
-              }}
+                if (notification.imageUrl) {
+      const uri = `${HOST}${notification.imageUrl}`;
+      console.log('🖼 Opening image viewer at:', uri);
+      setImageViewerUri(uri);
+      setImageViewerVisible(true);
+    } else {
+      notification.read = true;
+      setNotifications([...notifications]);
+    }
+  }}
             >
               <View style={styles.notificationHeader}>
                 <View style={styles.notificationIcon}>
@@ -141,6 +230,21 @@ export default function NotificationScreen({ route }) {
                 {notification.message}
               </Text>
 
+              {notification.imageUrl && (
+                  <TouchableOpacity
+    onPress={() => {
+      setImageViewerUri(`http://192.168.59.91:3000${notification.imageUrl}`);
+      setImageViewerVisible(true);
+    }}
+  >
+    <Image
+      source={{ uri: `http://192.168.59.91:3000${notification.imageUrl}` }}
+      style={{ width: '100%', height: 200, borderRadius: 10, marginTop: 10 }}
+      resizeMode="cover"
+    />
+  </TouchableOpacity>
+              )}
+
               <View style={styles.notificationFooter}>
                 <Text style={styles.notificationTime}>
                   {new Date(notification.time).toLocaleString()}
@@ -151,7 +255,7 @@ export default function NotificationScreen({ route }) {
           </View>
         ))}
       </ScrollView>
-
+      
       {notifications.length === 0 && (
         <View style={styles.emptyState}>
           <Feather name="bell" size={48} color="#9CA3AF" />
@@ -161,11 +265,19 @@ export default function NotificationScreen({ route }) {
           </Text>
         </View>
       )}
+
+      {/* 🔍 Full-screen image viewer */}
+      <ImageView
+        images={ imageViewerUri ? [{ uri: imageViewerUri }] : [] }
+        imageIndex={0}
+        visible={imageViewerVisible}
+        onRequestClose={() => setImageViewerVisible(false)}
+      />
     </View>
   );
 }
 
-
+// Utilities
 function getNotificationIcon(type) {
   switch (type) {
     case 'warning':
@@ -192,11 +304,9 @@ function getNotificationBorder(type) {
   }
 }
 
+// Styles (unchanged, as yours are already good)
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9FAFB',
-  },
+  container: { flex: 1, backgroundColor: '#F9FAFB' },
   header: {
     backgroundColor: '#FFFFFF',
     paddingTop: 60,
@@ -208,15 +318,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
   },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontFamily: 'Inter-Bold',
-    color: '#1F2937',
-  },
+  headerLeft: { flexDirection: 'row', alignItems: 'center' },
+  title: { fontSize: 24, fontFamily: 'Inter-Bold', color: '#1F2937' },
   unreadBadge: {
     backgroundColor: '#EF4444',
     borderRadius: 10,
@@ -241,10 +344,7 @@ const styles = StyleSheet.create({
     color: '#1F2937',
     marginBottom: 12,
   },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-  },
+  inputContainer: { flexDirection: 'row', alignItems: 'flex-end' },
   input: {
     flex: 1,
     backgroundColor: '#F9FAFB',
@@ -266,10 +366,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  notificationsList: {
-    flex: 1,
-    padding: 20,
-  },
+  notificationsList: { flex: 1, padding: 20 },
   notificationCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
@@ -281,24 +378,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 1,
   },
-  unreadCard: {
-    backgroundColor: '#F0F9FF',
-  },
-  notificationContent: {
-    padding: 16,
-  },
-  notificationHeader: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: 8,
-  },
-  notificationIcon: {
-    marginRight: 12,
-    marginTop: 2,
-  },
-  notificationMeta: {
-    flex: 1,
-  },
+  unreadCard: { backgroundColor: '#F0F9FF' },
+  notificationContent: { padding: 16 },
+  notificationHeader: { flexDirection: 'row', alignItems: 'flex-start', marginBottom: 8 },
+  notificationIcon: { marginRight: 12, marginTop: 2 },
+  notificationMeta: { flex: 1 },
   notificationTitle: {
     fontSize: 16,
     fontFamily: 'Inter-SemiBold',
@@ -309,9 +393,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'Inter-Regular',
     color: '#6B7280',
-  },
-  deleteButton: {
-    padding: 4,
   },
   notificationMessage: {
     fontSize: 14,
@@ -356,4 +437,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 20,
   },
+  uploadButton: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  alignSelf: 'flex-start',
+  paddingVertical: 6,
+  paddingHorizontal: 12,
+  backgroundColor: '#E0ECFF',
+  borderRadius: 8,
+  marginBottom: 10,
+},
+uploadText: {
+  color: '#2563EB',
+  fontSize: 14,
+  fontFamily: 'Inter-SemiBold',
+},
 });

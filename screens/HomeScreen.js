@@ -1,14 +1,14 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Feather } from '@expo/vector-icons'; // ✅ Feather icon set
+import { Feather } from '@expo/vector-icons'; 
 
 const { width } = Dimensions.get('window');
 
 export default function HomeScreen() {
   const activeBuses = [
-    { id: 'BUS001', route: 'Route A', status: 'On Time', location: 'Main Gate', capacity: '32/40' },
-    { id: 'BUS002', route: 'Route B', status: 'Delayed', location: 'Science Block', capacity: '28/40' },
-    { id: 'BUS003', route: 'Route C', status: 'On Time', location: 'Library', capacity: '35/40' },
+    { id: 'BUS001', route: 'Route 1', status: 'On Time', location: 'Ennore', capacity: '32/40' },
+    { id: 'BUS002', route: 'Route 1', status: 'On Time', location: 'Tondirapet', capacity: '28/40' },
+    { id: 'BUS003', route: 'Route 1', status: 'On Time', location: 'Mint', capacity: '35/40' },
   ];
 
   const recentNotifications = [
@@ -26,17 +26,17 @@ export default function HomeScreen() {
           <View style={styles.statsContainer}>
             <View style={styles.statItem}>
               <Feather name="truck" size={24} color="#FFFFFF" />
-              <Text style={styles.statNumber}>8</Text>
+              <Text style={styles.statNumber}>75</Text>
               <Text style={styles.statLabel}>Active Buses</Text>
             </View>
             <View style={styles.statItem}>
               <Feather name="users" size={24} color="#FFFFFF" />
-              <Text style={styles.statNumber}>245</Text>
+              <Text style={styles.statNumber}>3500</Text>
               <Text style={styles.statLabel}>Students</Text>
             </View>
             <View style={styles.statItem}>
               <Feather name="map-pin" size={24} color="#FFFFFF" />
-              <Text style={styles.statNumber}>5</Text>
+              <Text style={styles.statNumber}>65</Text>
               <Text style={styles.statLabel}>Routes</Text>
             </View>
           </View>

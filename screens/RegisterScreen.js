@@ -9,29 +9,32 @@ export default function RegisterScreen({ navigation }) {
     email: '',
     phone: '',
     password: '',
-    confirmPassword: '',
-    address: '',
-    studentId: '',
-    department: '',
+    
+    
   });
   const [userType, setUserType] = useState('student');
 
-  const handleRegister = () => {
-    if (!formData.name || !formData.email || !formData.phone || !formData.password) {
-      Alert.alert('Error', 'Please fill in all required fields');
-      return;
-    }
+  const handleRegister = async () => {
+  if (!formData.email || !formData.password) {
+    Alert.alert('Error', 'Please fill all the fields');
+    return;
+  }
 
-    if (formData.password !== formData.confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match');
-      return;
-    }
+  
 
-    Alert.alert('Success', 'Account created successfully!', [
-      { text: 'OK', onPress: () => navigation.navigate('Login') }
-    ]);
-  };
-
+  try {
+    const res = await fetch('https://192.168.59.91/api/incharge/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: formData.email, password: formData.password }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Registration failed');
+    Alert.alert('Success', 'Account created', [{ text: 'OK', onPress: () => navigation.navigate('Login') }]);
+  } catch (e) {
+    Alert.alert('Error', e.message);
+  }
+};
   return (
     <LinearGradient
       colors={['#2563EB', '#1E40AF']}
@@ -48,7 +51,7 @@ export default function RegisterScreen({ navigation }) {
           <View style={styles.userTypeContainer}>
             <Text style={styles.userTypeLabel}>Select User Type</Text>
             <View style={styles.userTypeButtons}>
-              {['student', 'driver', 'incharge'].map((type) => (
+              {[ 'incharge'].map((type) => (
                 <TouchableOpacity
                   key={type}
                   style={[
@@ -104,22 +107,8 @@ export default function RegisterScreen({ navigation }) {
             />
           </View>
 
-          {userType === 'student' && (
-            <>
-              <View style={styles.inputContainer}>
-                <Feather name="hash" size={20} color="#64748B" />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Reg No"
-                  placeholderTextColor="#64748B"
-                  value={formData.studentId}
-                  onChangeText={(text) => setFormData({ ...formData, studentId: text })}
-                />
-              </View>
-
-              
-            </>
-          )}
+          
+        
 
          
           <View style={styles.inputContainer}>

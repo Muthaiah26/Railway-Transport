@@ -1,48 +1,50 @@
 import { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Feather } from '@expo/vector-icons'; 
+import { Feather } from '@expo/vector-icons';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
   const [userType, setUserType] = useState('student');
-  
+
   const handleLogin = async () => {
-    if (userType === 'driver') {
-      if (!mobile.trim()) {
-        Alert.alert('Error', 'Please enter your mobile number');
-        return;
-      }
-      try {
-        const resp = await fetch('https://transport-3d8k.onrender.com/api/driver/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ mobile })
-        });
-        const data = await resp.json();
-        if (!resp.ok) throw new Error(data.error || 'Login failed');
-        navigation.replace('RouteDetail', { userType: 'driver', mobile });
-      } catch (e) {
-        Alert.alert('Login Error', e.message);
-      }
-    } else {
-      
-      navigation.replace('Main', { role: userType });
+  if (userType === 'student') {
+    navigation.replace('Main', { role: 'student' });
+  } else if (userType === 'incharge') {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please enter email and password');
+      return;
     }
-  };
+
+    try {
+      const response = await fetch('http://192.168.59.91:3000/api/incharge/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+        email: email.trim(),
+        password: password.trim()
+        })
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Login failed');
+
+      navigation.replace('Main', { role: 'incharge', email });
+    } catch (err) {
+      Alert.alert('Login Error', err.message);
+    }
+  }
+};
 
   return (
-    <LinearGradient
-      colors={['#2563EB', '#1E40AF']}
-      style={styles.container}
-    >
+    <LinearGradient colors={['#2563EB', '#1E40AF']} style={styles.container}>
       <View style={styles.content}>
         <View style={styles.header}>
           <Feather name="truck" size={40} color="#FFFFFF" />
           <Text style={styles.title}>Welcome Back</Text>
-          <Text style={styles.subtitle}>Sign in to continue</Text>
+          <Text style={styles.subtitle}>Enjoy our App</Text>
         </View>
 
         <View style={styles.form}>
@@ -84,7 +86,7 @@ export default function LoginScreen({ navigation }) {
             </View>
           )}
 
-          {userType !== 'driver' && (
+          {userType === 'incharge' && (
             <>
               <View style={styles.inputContainer}>
                 <Feather name="mail" size={20} color="#64748B" />
@@ -113,17 +115,12 @@ export default function LoginScreen({ navigation }) {
           )}
 
           <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-            <Text style={styles.loginButtonText}>Sign In</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.registerLink}
-            onPress={() => navigation.navigate('Register')}
-          >
-            <Text style={styles.registerText}>
-              Don't have an account? <Text style={styles.registerTextBold}>Sign Up</Text>
+            <Text style={styles.loginButtonText}>
+              {userType === 'student' ? 'Go' : 'Sign In'}
             </Text>
           </TouchableOpacity>
+
+          
         </View>
       </View>
     </LinearGradient>

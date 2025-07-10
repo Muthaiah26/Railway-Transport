@@ -30,7 +30,7 @@ import ProfileScreen from './screens/ProfileScreen';
 import RouteDetailScreen from './screens/RouteDetailScreen';
 
 
-
+// Create Socket Context
 export const SocketContext = createContext(null);
 
 SplashScreen.preventAutoHideAsync();
@@ -133,7 +133,7 @@ export default function App() {
   });
 
   
-  const socket = io('https://transport-3d8k.onrender.com', {
+  const socket = io('http://192.168.59.91:3000', {
     transports: ['websocket'],
   });
 
