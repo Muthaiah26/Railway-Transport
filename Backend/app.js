@@ -22,7 +22,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 
-mongoose.connect('mongodb://localhost:27017/college_transport', {
+mongoose.connect('mongodb+srv://pandimuthaiah2006:muthu2006@cluster0.wnkamf8.mongodb.net/college_transport?retryWrites=true&w=majority&appName=Cluster0', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
