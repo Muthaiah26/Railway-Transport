@@ -29,7 +29,7 @@ export default function NotificationScreen({ route }) {
 
   const HOST = Platform.OS === 'android'
   ? 'http://10.0.2.2:3000'      
-  : 'http://192.168.59.91:3000';
+  : 'https://transport-3d8k.onrender.com';
  
   useEffect(() => {
 
@@ -41,7 +41,7 @@ export default function NotificationScreen({ route }) {
         setNotifications(prev => [notif, ...prev]);
 
          const imageUri = notif.imageUrl
-      ? `http://192.168.59.91:3000${notif.imageUrl}`
+      ? `https://transport-3d8k.onrender.com${notif.imageUrl}`
       : undefined;
 
         await Notifications.scheduleNotificationAsync({
@@ -78,7 +78,7 @@ export default function NotificationScreen({ route }) {
 
   const fetchNotifications = async () => {
     try {
-      const res = await fetch('http://192.168.59.91:3000/api/notifications');
+      const res = await fetch('https://transport-3d8k.onrender.com/api/notifications');
       const data = await res.json();
       setNotifications(data);
     } catch (err) {
@@ -118,7 +118,7 @@ export default function NotificationScreen({ route }) {
     }
 
     try {
-      const res = await fetch('http://192.168.59.91:3000/api/notifications', {
+      const res = await fetch('https://transport-3d8k.onrender.com/api/notifications', {
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -233,12 +233,12 @@ export default function NotificationScreen({ route }) {
               {notification.imageUrl && (
                   <TouchableOpacity
     onPress={() => {
-      setImageViewerUri(`http://192.168.59.91:3000${notification.imageUrl}`);
+      setImageViewerUri(`https://transport-3d8k.onrender.com${notification.imageUrl}`);
       setImageViewerVisible(true);
     }}
   >
     <Image
-      source={{ uri: `http://192.168.59.91:3000${notification.imageUrl}` }}
+      source={{ uri: `https://transport-3d8k.onrender.com${notification.imageUrl}` }}
       style={{ width: '100%', height: 200, borderRadius: 10, marginTop: 10 }}
       resizeMode="cover"
     />

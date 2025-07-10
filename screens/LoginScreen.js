@@ -19,7 +19,7 @@ export default function LoginScreen({ navigation }) {
     }
 
     try {
-      const response = await fetch('http://192.168.59.91:3000/api/incharge/login', {
+      const response = await fetch('https://transport-3d8k.onrender.com/api/incharge/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
