@@ -4,7 +4,7 @@ import { View, Text, StyleSheet } from 'react-native';
 const RouteDetailScreen = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.message}>🚧 Work is under process 🚧</Text>
+      <Text style={styles.message}>🚧 Work is in progress. 🚧</Text>
     </View>
   );
 };

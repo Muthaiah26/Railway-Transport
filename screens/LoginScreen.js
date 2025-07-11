@@ -44,7 +44,6 @@ export default function LoginScreen({ navigation }) {
         <View style={styles.header}>
           <Feather name="truck" size={40} color="#FFFFFF" />
           <Text style={styles.title}>Welcome Back</Text>
-          <Text style={styles.subtitle}>Enjoy our App</Text>
         </View>
 
         <View style={styles.form}>

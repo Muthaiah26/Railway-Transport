@@ -182,6 +182,9 @@ export default function App() {
             <Stack.Screen name="Register" component={RegisterScreen} />
             <Stack.Screen name="Main" component={TabNavigator} />
              <Stack.Screen name="RouteDetail" component={RouteDetailScreen} options={{ headerShown: true, headerBackTitle: 'Back', title: 'Route Detail' }} />
+             <Stack.Screen name="Search" component={SearchScreen} />
+             <Stack.Screen name="Notification" component={NotificationScreen} />
+             <Stack.Screen name="Tracking" component={TrackingScreen} />
           </Stack.Navigator>
           <Toast />
         </NavigationContainer>

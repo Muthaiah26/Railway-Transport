@@ -19,16 +19,20 @@ export default function WelcomeScreen({ navigation }) {
       <View style={styles.content}>
         <View style={styles.logoContainer}>
           <View style={styles.iconContainer}>
-            <Feather name="truck" size={48} color="#FFFFFF" /> {/* Bus replacement */}
+            <Image 
+               source={require('../assets/logo.png')} 
+               style={styles.logoImage} 
+               resizeMode="contain"
+            />
           </View>
-          <Text style={styles.title}>College Transport</Text>
+          <Text style={styles.title}>CIT Transport</Text>
           <Text style={styles.subtitle}>Smart Transportation System</Text>
         </View>
 
         <View style={styles.featuresContainer}>
           <View style={styles.feature}>
             <Feather name="map-pin" size={24} color="#FFFFFF" />
-            <Text style={styles.featureText}>Live Bus Tracking</Text>
+            <Text style={styles.featureText}>Live Notifications</Text>
           </View>
           <View style={styles.feature}>
             <Feather name="users" size={24} color="#FFFFFF" />
@@ -65,6 +69,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 60,
   },
+  logoImage: {
+  width: 80,       
+  height: 80,
+  borderRadius: 10,
+},
   iconContainer: {
     width: 100,
     height: 100,

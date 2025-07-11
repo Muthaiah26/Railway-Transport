@@ -1,10 +1,13 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons'; 
+import { use } from 'react';
+import { useNavigation } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 
 export default function HomeScreen() {
+  const navigation=useNavigation();
   const activeBuses = [
     { id: 'BUS001', route: 'Route 1', status: 'On Time', location: 'Ennore', capacity: '32/40' },
     { id: 'BUS002', route: 'Route 1', status: 'On Time', location: 'Tondirapet', capacity: '28/40' },
@@ -22,21 +25,21 @@ export default function HomeScreen() {
       <LinearGradient colors={['#2563EB', '#1E40AF']} style={styles.header}>
         <View style={styles.headerContent}>
           <Text style={styles.greeting}>Hello Everyone!</Text>
-          <Text style={styles.welcomeText}>Welcome to College Transport</Text>
+          <Text style={styles.welcomeText}>Welcome to CIT Transport</Text>
           <View style={styles.statsContainer}>
             <View style={styles.statItem}>
               <Feather name="truck" size={24} color="#FFFFFF" />
-              <Text style={styles.statNumber}>75</Text>
+              <Text style={styles.statNumber}>101</Text>
               <Text style={styles.statLabel}>Active Buses</Text>
             </View>
             <View style={styles.statItem}>
               <Feather name="users" size={24} color="#FFFFFF" />
-              <Text style={styles.statNumber}>3500</Text>
+              <Text style={styles.statNumber}>4000</Text>
               <Text style={styles.statLabel}>Students</Text>
             </View>
             <View style={styles.statItem}>
               <Feather name="map-pin" size={24} color="#FFFFFF" />
-              <Text style={styles.statNumber}>65</Text>
+              <Text style={styles.statNumber}>101</Text>
               <Text style={styles.statLabel}>Routes</Text>
             </View>
           </View>
@@ -83,37 +86,18 @@ export default function HomeScreen() {
           ))}
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Recent Notifications</Text>
-          {recentNotifications.map((notification) => (
-            <View key={notification.id} style={styles.notificationCard}>
-              <View style={styles.notificationIcon}>
-                {notification.type === 'warning' && (
-                  <Feather name="alert-circle" size={20} color="#F59E0B" />
-                )}
-                {notification.type === 'info' && (
-                  <Feather name="bell" size={20} color="#3B82F6" />
-                )}
-                {notification.type === 'alert' && (
-                  <Feather name="alert-circle" size={20} color="#EF4444" />
-                )}
-              </View>
-              <View style={styles.notificationContent}>
-                <Text style={styles.notificationMessage}>{notification.message}</Text>
-                <Text style={styles.notificationTime}>{notification.time}</Text>
-              </View>
-            </View>
-          ))}
-        </View>
+       
 
         <View style={styles.quickActions}>
           <Text style={styles.sectionTitle}>Quick Actions</Text>
           <View style={styles.actionGrid}>
-            <TouchableOpacity style={styles.actionCard}>
+            <TouchableOpacity 
+            style={styles.actionCard}  
+            onPress={() =>navigation.navigate('Search')} >
               <Feather name="search" size={32} color="#2563EB" />
               <Text style={styles.actionText}>Search Bus</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.actionCard}>
+            <TouchableOpacity style={styles.actionCard} onPress={() =>navigation.navigate('Tracking')} >
               <Feather name="map-pin" size={32} color="#059669" />
               <Text style={styles.actionText}>Live Tracking</Text>
             </TouchableOpacity>
@@ -121,7 +105,7 @@ export default function HomeScreen() {
               <Feather name="clock" size={32} color="#DC2626" />
               <Text style={styles.actionText}>Schedule</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.actionCard}>
+            <TouchableOpacity style={styles.actionCard} onPress={() =>navigation.navigate('Notification')}>
               <Feather name="bell" size={32} color="#7C3AED" />
               <Text style={styles.actionText}>Notifications</Text>
             </TouchableOpacity>
