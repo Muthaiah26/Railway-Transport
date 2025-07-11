@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "CIT Transport",
-    "slug": "CIT Transport",
+    "slug": "MyApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.webp",
