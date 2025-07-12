@@ -4,7 +4,7 @@
     "slug": "MyApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.webp",
+    "icon": "./assets/cit-logo.png",
     "userInterfaceStyle": "light",
     "runTimeVersion":"1.0.0",
     "newArchEnabled": true,
