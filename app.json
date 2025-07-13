@@ -11,26 +11,24 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff",
-      "updates": {
+      "backgroundColor": "#ffffff"
+      
+    },
+    "updates": {
         "url": "https://u.expo.dev/335651a2-7a36-4d74-b042-4a1c67eb597d",
         "channel": "preview",
         "fallbackToCacheTimeout": 0,
         "checkAutomatically": "ON_LOAD"
-      }
-    },
+      },
     "ios": {
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff",
+      "icon":"./assets/cit-logo.png",
         "permissions": [
-          "INTERNET",
           "INTERNET"
-        ]
-      },
+         
+        ],
       "package": "com.muthaiah26.MyApp"
     },
     "web": {
@@ -48,9 +46,7 @@
     },
     "runtimeVersion": {
       "policy": "appVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/335651a2-7a36-4d74-b042-4a1c67eb597d"
     }
+   
   }
 }
