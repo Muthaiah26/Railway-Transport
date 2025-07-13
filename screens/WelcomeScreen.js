@@ -72,11 +72,11 @@ const styles = StyleSheet.create({
   logoImage: {
   width: 80,       
   height: 80,
-  borderRadius: 10,
+  resizeMode: 'contain',
 },
   iconContainer: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
     borderRadius: 50,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     justifyContent: 'center',
