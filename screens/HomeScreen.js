@@ -6,6 +6,8 @@ import { useNavigation } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 
+
+
 export default function HomeScreen() {
   const navigation=useNavigation();
   const activeBuses = [
@@ -105,7 +107,7 @@ export default function HomeScreen() {
               <Feather name="clock" size={32} color="#DC2626" />
               <Text style={styles.actionText}>Schedule</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.actionCard} onPress={() =>navigation.navigate('Notification')}>
+            <TouchableOpacity style={styles.actionCard}>
               <Feather name="bell" size={32} color="#7C3AED" />
               <Text style={styles.actionText}>Notifications</Text>
             </TouchableOpacity>
