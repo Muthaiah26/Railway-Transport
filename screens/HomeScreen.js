@@ -26,7 +26,7 @@ export default function HomeScreen() {
     <ScrollView style={styles.container}>
       <LinearGradient colors={['#2563EB', '#1E40AF']} style={styles.header}>
         <View style={styles.headerContent}>
-          <Text style={styles.greeting}>Hello Everyone!</Text>
+          <Text style={styles.greeting}>Hello Everyone</Text>
           <Text style={styles.welcomeText}>Welcome to CIT Transport</Text>
           <View style={styles.statsContainer}>
             <View style={styles.statItem}>
